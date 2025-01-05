@@ -1,12 +1,4 @@
-﻿##########################
-#Получение информации    #
-#о компьютерах из базы AD#
-#PC.PS1                  #
-#12 июня 2017 г.         #
-#изменен 09 июля 2019    #  
-#Олег Груздев            #
-##########################
-#импорт модуля activedirectory, если модуль не доступен, вывод сообщения об ошибке
+﻿#импорт модуля activedirectory, если модуль не доступен, вывод сообщения об ошибке
 Import-Module activedirectory -ErrorAction SilentlyContinue
 if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
 {
@@ -15,7 +7,7 @@ if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
 #комментраий
 $comment = @"
 ##################################################
-#В поиск можно включить имя пользователя (англ.),#
+#В поиск можно включить логин пользователя       #
 #имя компьютера, IP адрес, подразделение.        #   
 ##################################################
 "@
@@ -25,19 +17,19 @@ Write-Host -ForegroundColor DarkCyan $comment
         {[string]$search=Read-Host "Поиск"}
         else {$search=$args[0]}
     Write-Host -ForegroundColor Yellow "выполняется поиск..."
-#поиск объекта в AD (-notmatch 'OU=test,OU=Компьютеры,DC=CRB,DC=KIN') можно исключить подразделение
+#поиск объекта в AD (-notmatch 'OU=test,OU=computers,DC=domain,DC=com') можно исключить подразделение
 
 write-host -ForegroundColor DarkGreen Получение сведений...
 #дата минус 30 дней
 $date_with_offset=(Get-Date).AddDays(-30)
 #Подключение к контейнеру с компьютерами, выполнявшими вход не менее 30 дней назад
-$PC=Get-ADComputer -Properties * -SearchBase 'OU=Компьютеры,DC=CRB,DC=KIN' -Filter {LastLogonDate -gt $date_with_offset}  |
+$PC=Get-ADComputer -Properties * -SearchBase 'OU=computers,DC=domain,DC=com' -Filter {LastLogonDate -gt $date_with_offset}  |
 where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.CanonicalName -match $search } 
 #Подключение к контейнеру с компьютерами, которых давно небыло видно
-$PC_last_logon=Get-ADComputer -SearchBase 'OU=Компьютеры,DC=CRB,DC=KIN' -Properties * -Filter {LastLogonDate -lt $date_with_offset} |
+$PC_last_logon=Get-ADComputer -SearchBase 'OU=computers,DC=domain,DC=com' -Properties * -Filter {LastLogonDate -lt $date_with_offset} |
 where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.CanonicalName -match $search } 
 #Подключение к контейнеру с компьютерами, которые не были в сети
-$PC_no_logon=Get-ADComputer -Server FUTURAMA -SearchBase 'OU=Компьютеры,DC=CRB,DC=KIN' -Filter {LogonCount -eq 0 } -Properties * |
+$PC_no_logon=Get-ADComputer -Server FUTURAMA -SearchBase 'OU=computers,DC=domain,DC=com' -Filter {LogonCount -eq 0 } -Properties * |
 where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.CanonicalName -match $search }
 
 #Запись переменных при условии что есть переменная description

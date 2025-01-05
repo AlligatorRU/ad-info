@@ -15,6 +15,7 @@ Import-Module activedirectory -ErrorAction SilentlyContinue
     if ($args.Count -eq 0) 
         {[string]$search=Read-Host "Поиск"}
         else {$search=$args[0]}
+#вывод сообщения о начале работы сценария
     Write-Host -ForegroundColor Yellow "выполняется поиск..."
 #поиск объекта в AD -notmatch 'OU=test,OU=Компьютеры,DC=CRB,DC=KIN'
 
