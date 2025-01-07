@@ -6,7 +6,7 @@ if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
     $comment = @"
        #############################################
        #В поиск можно включить ФИО, имя компьютера,#
-       #отдел, должность или номер телефона.       #
+       #IP адрес, Версию ОС                        #
        #############################################
 "@
     Write-Host -ForegroundColor DarkCyan $comment
