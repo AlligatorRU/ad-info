@@ -1,9 +1,8 @@
 ﻿#импорт модуля activedirectory, если модуль не доступен, вывод сообщения об ошибке
 Import-Module activedirectory -ErrorAction SilentlyContinue
-    if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
-        { 
-
-        #комментраий
+if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
+    {
+#вывод комментраия
     $comment = @"
        #############################################
        #В поиск можно включить ФИО, имя компьютера,#
@@ -17,7 +16,7 @@ Import-Module activedirectory -ErrorAction SilentlyContinue
         else {$search=$args[0]}
 #вывод сообщения о начале работы сценария
     Write-Host -ForegroundColor Yellow "выполняется поиск..."
-#поиск объекта в AD -notmatch 'OU=test,OU=Компьютеры,DC=CRB,DC=KIN'
+#поиск объекта в AD -notmatch 'OU=test,OU=computers,DC=domain,DC=com'
 
             write-host -ForegroundColor DarkGreen Получение сведений...
             #Получаем время компьютера
