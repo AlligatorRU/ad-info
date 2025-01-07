@@ -4,7 +4,7 @@ if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
 {
 ################################################################################################################
 
-#комментраий
+#вывести сообщение
 $comment = @"
 ##################################################
 #В поиск можно включить логин пользователя       #
@@ -20,19 +20,14 @@ Write-Host -ForegroundColor DarkCyan $comment
 #поиск объекта в AD (-notmatch 'OU=test,OU=computers,DC=domain,DC=com') можно исключить подразделение
 
 write-host -ForegroundColor DarkGreen Получение сведений...
-#дата минус 30 дней
 $date_with_offset=(Get-Date).AddDays(-30)
-#Подключение к контейнеру с компьютерами, выполнявшими вход не менее 30 дней назад
 $PC=Get-ADComputer -Properties * -SearchBase 'OU=computers,DC=domain,DC=com' -Filter {LastLogonDate -gt $date_with_offset}  |
 where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.CanonicalName -match $search } 
-#Подключение к контейнеру с компьютерами, которых давно небыло видно
 $PC_last_logon=Get-ADComputer -SearchBase 'OU=computers,DC=domain,DC=com' -Properties * -Filter {LastLogonDate -lt $date_with_offset} |
 where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.CanonicalName -match $search } 
-#Подключение к контейнеру с компьютерами, которые не были в сети
 $PC_no_logon=Get-ADComputer -Server FUTURAMA -SearchBase 'OU=computers,DC=domain,DC=com' -Filter {LogonCount -eq 0 } -Properties * |
 where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.CanonicalName -match $search }
 
-#Запись переменных при условии что есть переменная description
 $PC | ForEach-Object {
     if ($_.description -ne $null)
         {
@@ -41,7 +36,6 @@ $PC | ForEach-Object {
             $description=$_.description
             $CanonicalName=$_.CanonicalName
             $operatingSystem=$_.operatingSystem
-#ICMP запрос
             if (Test-Connection -Count 1 -ComputerName $IPv4Address -Quiet)
                 {
                 $status=write-host -ForegroundColor Green "ONLINE"

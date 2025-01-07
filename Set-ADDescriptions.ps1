@@ -1,10 +1,9 @@
 ﻿#powershell
-#Вывод сообщения о начале работы сценария
 #импорт модуля activedirectory, если модуль не доступен, вывод сообщения об ошибке
 Import-Module activedirectory -ErrorAction SilentlyContinue
 if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
     {
-
+#Вывод сообщения о начале работы сценария
     write-host -ForegroundColor DarkGreen Получение сведений из базы AD...
     $date_with_offset=(Get-Date).AddDays(-30)
     #Находим объекты компьютера, которые выполняли вход не поздней чем 30 дней назад.

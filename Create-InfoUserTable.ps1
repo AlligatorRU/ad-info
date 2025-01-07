@@ -3,7 +3,7 @@ Import-Module activedirectory -ErrorAction SilentlyContinue
 if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
     { 
 
-#комментраий
+#показать комментраий
     $comment = @"
        #############################################
        #В поиск можно включить ФИО, имя компьютера,#
@@ -17,12 +17,10 @@ if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
         else {$search=$args[0]}
 
 #поиск объекта в AD
-    $SObject=Get-ADUser -Filter {Enabled -eq $True}  -Properties * -SearchBase 'OU=People,DC=CRB,DC=KIN' |
+    $SObject=Get-ADUser -Filter {Enabled -eq $True}  -Properties * -SearchBase 'OU=users,DC=domain,DC=com' |
     where {$_.description,$_.DisplayName,$_.telephoneNumber,$_.Department,$_.Title,$_.l -match $search} | Sort-Object Department
     $date_with_offset=(Get-Date).AddDays(-30)
-#поиск по объекту
-#проверка существования атрибута
-   # Созадём объект Excel
+# Созадём объект Excel
 $Excel = New-Object -ComObject Excel.Application
 
 # Делаем его видимым

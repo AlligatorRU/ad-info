@@ -10,28 +10,23 @@ if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
        #############################################
 "@
     Write-Host -ForegroundColor DarkCyan $comment
-#задать значение переменной $search
     if ($args.Count -eq 0) 
         {[string]$search=Read-Host "Поиск"}
         else {$search=$args[0]}
 #вывод сообщения о начале работы сценария
     Write-Host -ForegroundColor Yellow "выполняется поиск..."
-#поиск объекта в AD -notmatch 'OU=test,OU=computers,DC=domain,DC=com'
+#-notmatch 'OU=test,OU=computers,DC=domain,DC=com'
 
             write-host -ForegroundColor DarkGreen Получение сведений...
-            #Получаем время компьютера
             $date_with_offset=(Get-Date).AddDays(-90)
-            #Подключение к контейнеру с компьютерами
-            $PC=Get-ADComputer -Properties * -SearchBase 'OU=Компьютеры,DC=CRB,DC=KIN' -Filter {LastLogonDate -gt $date_with_offset}  |
+            $PC=Get-ADComputer -Properties * -SearchBase 'OU=computers,DC=domain,DC=com' -Filter {LastLogonDate -gt $date_with_offset}  |
             where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.distinguishedName -match $search } |
             Sort-Object operatingSystem | ft -Property name, IPv4Address, operatingSystem, description, distinguishedName  -Autosize
-            #Подключение к контейнеру с компьютерами, которых давно небыло видно
-            $PC_last_logon=Get-ADComputer -SearchBase 'OU=Компьютеры,DC=CRB,DC=KIN'`
+            $PC_last_logon=Get-ADComputer -SearchBase 'OU=computers,DC=domain,DC=com'`
             -Properties * -Filter {LastLogonDate -lt $date_with_offset} |
             where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.distinguishedName -match $search } | Sort-Object operatingSystem |
              ft -Property name, IPv4Address, operatingSystem, description, distinguishedName -Autosize
-            #Подключение к контейнеру с компьютерами, которые не были в сети
-            $PC_no_logon=Get-ADComputer -Server FUTURAMA -SearchBase 'OU=Компьютеры,DC=CRB,DC=KIN' -Filter {LogonCount -eq 0 } -Properties * |
+            $PC_no_logon=Get-ADComputer -Server FUTURAMA -SearchBase 'OU=computers,DC=domain,DC=com' -Filter {LogonCount -eq 0 } -Properties * |
             where {$_.name, $_.IPv4Address, $_.operatingSystem, $_.description, $_.distinguishedName -match $search } | ft -Property operatingSystem,  description, distinguishedName
             ################################################################################################################
             #вывод информации на экран
