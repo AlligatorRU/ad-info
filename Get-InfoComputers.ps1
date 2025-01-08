@@ -111,7 +111,6 @@ $PC_no_logon | ForEach-Object {
 ################################################################################################################
     } else {
 write-host -ForegroundColor Red "Модуль Active Directory для Windows PowerShell не установлен.`n
-Для установки модуля требуется набор утилит Microsoft Remote Server Administration Tools (RSAT).`n
-RSAT можно найти в папке \\FS\soft\OS\RSAT."
+Для установки модуля требуется набор утилит Microsoft Remote Server Administration Tools (RSAT).
 }
   

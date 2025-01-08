@@ -46,6 +46,5 @@ if (Get-Module -name ActiveDirectory -ErrorAction SilentlyContinue)
             ################################################################################################################
     } else {
 write-host -ForegroundColor Red "Модуль Active Directory для Windows PowerShell не установлен.`n
-Для установки модуля требуется набор утилит Microsoft Remote Server Administration Tools (RSAT).`n
-RSAT можно найти в папке \\SR05\soft\OS\RSAT."
+Для установки модуля требуется набор утилит Microsoft Remote Server Administration Tools (RSAT).
 }
